@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+
+{% block title %}Progress | GymSphere{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <h1 class="text-2xl font-bold text-white">Your Progress</h1>
+
+    <!-- Stats Grid -->
+    <div class="grid grid-cols-2 gap-4">
+        <div class="glass-premium rounded-xl p-4">
+            <div class="text-gray-400 text-xs uppercase mb-1">Streak</div>
+            <div class="text-3xl font-bold text-cyan-400">0 <span class="text-base font-normal text-white">days</span>
+            </div>
+        </div>
+        <div class="glass-premium rounded-xl p-4">
+            <div class="text-gray-400 text-xs uppercase mb-1">Total Workouts</div>
+            <div class="text-3xl font-bold text-purple-400">0</div>
+        </div>
+    </div>
+
+    <!-- Chart -->
+    <div class="glass-premium rounded-2xl p-4">
+        <h2 class="text-sm font-semibold text-gray-300 mb-4">Weight History</h2>
+        <canvas id="detailProgressChart" class="w-full h-64"></canvas>
+    </div>
+
+    <!-- Calendar Heatmap (Placeholder for complexity) -->
+    <div class="glass-premium rounded-2xl p-4">
+        <h2 class="text-sm font-semibold text-gray-300 mb-4">Consistency</h2>
+        <div class="grid grid-cols-7 gap-1 text-center">
+            <!-- Week Header -->
+            <div class="text-xs text-gray-600">M</div>
+            <div class="text-xs text-gray-600">T</div>
+            <div class="text-xs text-gray-600">W</div>
+            <div class="text-xs text-gray-600">T</div>
+            <div class="text-xs text-gray-600">F</div>
+            <div class="text-xs text-gray-600">S</div>
+            <div class="text-xs text-gray-600">S</div>
+
+            <!-- Fake Days -->
+            {% for i in range(28) %}
+            <div class="aspect-square rounded-sm bg-white/5 hover:bg-cyan-500/20 transition-colors 
+            {% if i in [0, 2, 3, 5, 8, 9, 10, 15, 16] %}bg-cyan-500/40{% endif %}"></div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Update Weight Form -->
+    <div class="glass-premium rounded-2xl p-4">
+        <h2 class="text-sm font-semibold text-white mb-3">Log Weight</h2>
+        <form action="{{ url_for('update_progress') }}" method="POST" class="flex gap-2">
+            <input type="number" step="0.1" name="weight" placeholder="kg"
+                class="flex-1 bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:border-cyan-400 outline-none">
+            <button type="submit" class="bg-white text-black font-bold px-6 rounded-lg text-sm">Save</button>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const ctx = document.getElementById("detailProgressChart");
+        if (!ctx) return;
+
+        const labels = {{ (progress_labels or[]) | tojson }};
+    const data = {{ (progress_values or[]) | tojson }};
+
+    if (!labels.length) {
+        ctx.parentElement.innerHTML += '<div class="text-gray-500 text-center text-sm py-8">No data yet</div>';
+        ctx.style.display = "none";
+        return;
+    }
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels,
+            datasets: [{
+                label: 'Weight',
+                data,
+                borderColor: '#00F6FF',
+                backgroundColor: 'rgba(0, 246, 255, 0.1)',
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: '#000'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+                x: { display: false },
+                y: {
+                    grid: { color: 'rgba(255,255,255,0.05)' },
+                    ticks: { color: '#666' }
+                }
+            }
+        }
+    });
+  });
+</script>
+{% endblock %}

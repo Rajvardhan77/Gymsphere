@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+
+{% block title %}Choose Goal | GymSphere{% endblock %}
+
+{% block content %}
+<div class="text-center space-y-8">
+  <div class="text-left mb-4">
+    <a href="{{ url_for('index') }}" class="text-sm text-purple-200 hover:text-cyan-200 transition">← Back</a>
+  </div>
+  <div>
+    <div class="text-4xl font-semibold text-cyan-200 flex items-center justify-center gap-3">
+      <span class="text-5xl">🎯</span>
+      Choose Your Goal
+    </div>
+    <p class="text-gray-300 mt-2">Select the outcome that best matches your journey.</p>
+  </div>
+
+  <form method="POST" action="{{ url_for('goal') }}" class="grid sm:grid-cols-3 gap-4">
+    {% for g in ["lose", "gain", "recomp"] %}
+      <button type="submit" name="goal" value="{{ g }}"
+        class="glass neon-border rounded-2xl px-6 py-5 text-lg font-medium text-white hover:-translate-y-0.5 transition transform shadow-lg"
+        style="box-shadow: 0 0 12px #22d3ee, 0 0 18px #a855f7;">
+        {{ g|capitalize }}
+      </button>
+    {% endfor %}
+  </form>
+
+  <a href="{{ url_for('body_type') }}" class="inline-block mt-4 text-sm text-purple-200 hover:text-cyan-200 transition">Skip for now →</a>
+</div>
+{% endblock %}

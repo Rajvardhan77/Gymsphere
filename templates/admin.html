@@ -1,0 +1,109 @@
+{% extends "base.html" %}
+
+{% block title %}Admin | GymSphere{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+  <div class="text-center space-y-2">
+    <div class="text-4xl font-semibold text-cyan-200 flex items-center justify-center gap-3">
+      <span class="text-5xl">🛠️</span>
+      Admin Panel
+    </div>
+    <p class="text-gray-300">Manage catalog entries for exercises, diet plans, and products.</p>
+  </div>
+
+  <section class="glass neon-border rounded-3xl p-6 space-y-4">
+    <div class="text-xl font-semibold text-white">Exercises</div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-left text-gray-200">
+        <thead class="bg-black/40 text-cyan-200 uppercase text-xs">
+          <tr>
+            <th class="px-4 py-3">Name</th>
+            <th class="px-4 py-3">Muscle Group</th>
+            <th class="px-4 py-3">Difficulty</th>
+            <th class="px-4 py-3">Equipment</th>
+            <th class="px-4 py-3">Animation</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for ex in exercises %}
+          <tr class="border-b border-white/10 hover:bg-white/5">
+            <td class="px-4 py-3 font-semibold text-white">{{ ex.name }}</td>
+            <td class="px-4 py-3">{{ ex.muscle_group }}</td>
+            <td class="px-4 py-3">{{ ex.difficulty }}</td>
+            <td class="px-4 py-3">{{ ex.equipment }}</td>
+            <td class="px-4 py-3 text-cyan-200">{{ ex.animation_type|upper if ex.animation_type else 'N/A' }}</td>
+          </tr>
+          {% else %}
+          <tr><td class="px-4 py-3 text-gray-400" colspan="5">No exercises found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="glass neon-border rounded-3xl p-6 space-y-4">
+    <div class="text-xl font-semibold text-white">Diet Plans</div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-left text-gray-200">
+        <thead class="bg-black/40 text-cyan-200 uppercase text-xs">
+          <tr>
+            <th class="px-4 py-3">Name</th>
+            <th class="px-4 py-3">Goal</th>
+            <th class="px-4 py-3">Calories</th>
+            <th class="px-4 py-3">Protein</th>
+            <th class="px-4 py-3">Carbs</th>
+            <th class="px-4 py-3">Fats</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for plan in diet_plans %}
+          <tr class="border-b border-white/10 hover:bg-white/5">
+            <td class="px-4 py-3 font-semibold text-white">{{ plan.name }}</td>
+            <td class="px-4 py-3 capitalize">{{ plan.goal }}</td>
+            <td class="px-4 py-3">{{ plan.calories }}</td>
+            <td class="px-4 py-3">{{ plan.protein }}</td>
+            <td class="px-4 py-3">{{ plan.carbs }}</td>
+            <td class="px-4 py-3">{{ plan.fats }}</td>
+          </tr>
+          {% else %}
+          <tr><td class="px-4 py-3 text-gray-400" colspan="6">No diet plans found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="glass neon-border rounded-3xl p-6 space-y-4">
+    <div class="text-xl font-semibold text-white">Products</div>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-left text-gray-200">
+        <thead class="bg-black/40 text-cyan-200 uppercase text-xs">
+          <tr>
+            <th class="px-4 py-3">Name</th>
+            <th class="px-4 py-3">Category</th>
+            <th class="px-4 py-3">Price</th>
+            <th class="px-4 py-3">Description</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for product in products %}
+          <tr class="border-b border-white/10 hover:bg-white/5">
+            <td class="px-4 py-3 font-semibold text-white">{{ product.name }}</td>
+            <td class="px-4 py-3 capitalize">{{ product.category }}</td>
+            <td class="px-4 py-3 text-cyan-200">${{ product.price }}</td>
+            <td class="px-4 py-3">{{ product.description }}</td>
+          </tr>
+          {% else %}
+          <tr><td class="px-4 py-3 text-gray-400" colspan="4">No products found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</div>
+{% endblock %}
+
+
+
+

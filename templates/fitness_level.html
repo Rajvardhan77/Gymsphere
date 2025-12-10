@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Fitness Level | GymSphere{% endblock %}
+
+{% block content %}
+<div class="text-center space-y-8">
+  <div>
+    <div class="text-4xl font-semibold text-cyan-200 flex items-center justify-center gap-3">
+      <span class="text-5xl">💪</span>
+      Fitness Level
+    </div>
+    <p class="text-gray-300 mt-2">Pick the level that reflects your current capacity.</p>
+  </div>
+
+  <form method="POST" action="{{ url_for('fitness_level') }}" class="grid sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+    {% for level in ["Beginner", "Intermediate", "Advanced"] %}
+      <button type="submit" name="fitness_level" value="{{ level }}"
+        class="glass neon-border rounded-2xl px-6 py-5 text-lg font-medium text-white hover:-translate-y-0.5 transition transform shadow-lg"
+        style="box-shadow: 0 0 12px #22d3ee, 0 0 18px #a855f7;">
+        {{ level }}
+      </button>
+    {% endfor %}
+  </form>
+
+  <div class="flex items-center justify-center gap-6 text-sm">
+    <a href="{{ url_for('activity') }}" class="text-purple-200 hover:text-cyan-200 transition">← Back</a>
+    <a href="{{ url_for('dashboard') }}" class="text-purple-200 hover:text-cyan-200 transition">Skip →</a>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
