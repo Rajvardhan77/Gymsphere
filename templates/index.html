@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Home - GymSphere{% endblock %}
+
+{% block content %}
+<div class="text-center py-12">
+  <h1 class="text-5xl font-bold mb-4 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent">
+    Welcome to GymSphere
+  </h1>
+  <p class="text-xl text-gray-300 mb-8">
+    Your AI-powered fitness companion for workouts, nutrition, and progress tracking.
+  </p>
+  
+  {% if not current_user.is_authenticated %}
+    <div class="flex gap-4 justify-center">
+      <a href="{{ url_for('register') }}" class="btn-neon">
+        Get Started
+      </a>
+      <a href="{{ url_for('login') }}" class="glass px-6 py-3 rounded-lg hover:bg-opacity-20 transition">
+        Login
+      </a>
+    </div>
+  {% else %}
+    <div class="flex gap-4 justify-center">
+      <a href="{{ url_for('dashboard') }}" class="btn-neon">
+        Go to Dashboard
+      </a>
+      <a href="{{ url_for('goal') }}" class="glass px-6 py-3 rounded-lg hover:bg-opacity-20 transition">
+        Start Onboarding
+      </a>
+    </div>
+  {% endif %}
+  
+  <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div class="glass p-6 rounded-xl">
+      <div class="text-4xl mb-4">💪</div>
+      <h3 class="text-xl font-semibold mb-2 text-cyan-300">AI Workouts</h3>
+      <p class="text-gray-400">Personalized workout plans based on your goals and fitness level.</p>
+    </div>
+    <div class="glass p-6 rounded-xl">
+      <div class="text-4xl mb-4">🥗</div>
+      <h3 class="text-xl font-semibold mb-2 text-purple-300">Smart Nutrition</h3>
+      <p class="text-gray-400">Meal plans and macro tracking tailored to your transformation goals.</p>
+    </div>
+    <div class="glass p-6 rounded-xl">
+      <div class="text-4xl mb-4">📊</div>
+      <h3 class="text-xl font-semibold mb-2 text-pink-300">Progress Tracking</h3>
+      <p class="text-gray-400">Visualize your journey with charts and weekly progress updates.</p>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+
+
+
+

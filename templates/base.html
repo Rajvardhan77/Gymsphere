@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{% block title %}GymSphere{% endblock %}</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Global CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+
+  <style>
+    :root {
+      --glass-bg: rgba(255, 255, 255, 0.06);
+      --glass-border: rgba(255, 255, 255, 0.15);
+      --glow-cyan: #22d3ee;
+      --glow-purple: #a855f7;
+    }
+
+    body {
+      background: radial-gradient(circle at 20% 20%, rgba(34, 211, 238, 0.15), transparent 25%),
+        radial-gradient(circle at 80% 0%, rgba(168, 85, 247, 0.2), transparent 30%),
+        linear-gradient(135deg, #050505 0%, #0b0315 50%, #140526 100%);
+      min-height: 100vh;
+      color: #e9e9ff;
+    }
+
+    .glass {
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35), 0 0 25px rgba(34, 211, 238, 0.15), 0 0 25px rgba(168, 85, 247, 0.12);
+    }
+
+    .neon-border {
+      box-shadow: 0 0 12px var(--glow-cyan), 0 0 24px var(--glow-purple);
+    }
+
+    a:hover {
+      color: var(--glow-cyan);
+    }
+  </style>
+</head>
+
+<body class="font-sans antialiased">
+  <div class="absolute inset-0 pointer-events-none mix-blend-screen opacity-60">
+    <div class="absolute -left-10 top-10 w-64 h-64 bg-cyan-500 blur-3xl opacity-40"></div>
+    <div class="absolute right-0 top-0 w-72 h-72 bg-purple-500 blur-3xl opacity-30"></div>
+    <div class="absolute left-1/2 bottom-0 w-80 h-80 bg-indigo-700 blur-3xl opacity-20"></div>
+  </div>
+
+  <nav class="relative z-10 glass neon-border mx-4 mt-4 rounded-2xl px-6 py-4 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div
+        class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-400 to-purple-500 flex items-center justify-center text-xl font-bold text-black shadow-lg shadow-cyan-500/40">
+        GS
+      </div>
+      <div>
+        <div class="text-lg font-semibold text-cyan-200">GymSphere</div>
+        <div class="text-xs text-gray-300">Fitness. Nutrition. Progress.</div>
+      </div>
+    </div>
+    <!-- Mobile Toggle -->
+    <button id="mobileMenuBtn" class="md:hidden text-cyan-200 focus:outline-none">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+      </svg>
+    </button>
+
+    <!-- Desktop Menu -->
+    <div class="hidden md:flex items-center gap-4 text-sm">
+      <a href="{{ url_for('index') }}" class="hover:text-cyan-300 transition">Home</a>
+      {% if current_user.is_authenticated %}
+      <a href="{{ url_for('dashboard') }}" class="hover:text-cyan-300 transition">Dashboard</a>
+      <a href="{{ url_for('shop_page') }}" class="hover:text-cyan-300 transition">Shop</a>
+      <button id="notifBtn" class="relative hover:text-cyan-300 transition">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9">
+          </path>
+        </svg>
+        <span id="notifBadge" class="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full hidden"></span>
+      </button>
+      <a href="{{ url_for('logout') }}" class="hover:text-cyan-300 transition">Logout</a>
+      {% else %}
+      <a href="{{ url_for('login') }}" class="hover:text-cyan-300 transition">Login</a>
+      <a href="{{ url_for('register') }}" class="hover:text-purple-300 transition">Register</a>
+      {% endif %}
+    </div>
+
+    <!-- Mobile Menu (Hidden by default) -->
+    <div id="mobileMenu"
+      class="absolute top-full left-0 right-0 mt-4 mx-4 p-4 glass neon-border rounded-xl hidden flex-col gap-4 text-center md:hidden z-50">
+      <a href="{{ url_for('index') }}" class="block py-2 hover:text-cyan-300 transition">Home</a>
+      {% if current_user.is_authenticated %}
+      <a href="{{ url_for('dashboard') }}" class="block py-2 hover:text-cyan-300 transition">Dashboard</a>
+      <a href="{{ url_for('shop_page') }}" class="block py-2 hover:text-cyan-300 transition">Shop</a>
+      <a href="{{ url_for('logout') }}" class="block py-2 hover:text-cyan-300 transition">Logout</a>
+      {% else %}
+      <a href="{{ url_for('login') }}" class="block py-2 hover:text-cyan-300 transition">Login</a>
+      <a href="{{ url_for('register') }}" class="block py-2 hover:text-purple-300 transition">Register</a>
+      {% endif %}
+    </div>
+  </nav>
+
+  <main class="relative z-10 mx-auto max-w-5xl px-4 py-10">
+    <div class="glass neon-border rounded-3xl p-8">
+      {% block content %}{% endblock %}
+    </div>
+  </main>
+
+  <!-- Notification Center (Slide-over) -->
+  <div id="notificationPanel"
+    class="fixed inset-y-0 right-0 w-80 bg-[#0A0A0F] border-l border-white/10 transform translate-x-full transition-transform duration-300 z-[60] shadow-2xl glass">
+    <div class="p-4 border-b border-white/10 flex items-center justify-between text-cyan-200">
+      <h2 class="font-bold">Notifications</h2>
+      <button id="closeNotifs" class="text-gray-400 hover:text-white">&times;</button>
+    </div>
+
+    <div class="p-4 flex justify-between items-center text-xs text-gray-400">
+      <span id="unreadCountDisplay">0 unread</span>
+      <button id="markAllReadBtn" class="hover:text-cyan-400 transition-colors">Mark all read</button>
+    </div>
+
+    <div id="notificationList" class="p-4 space-y-3 overflow-y-auto h-[calc(100vh-140px)]">
+      <!-- Loaded dynamically -->
+      <div class="text-center text-gray-500 py-10 text-sm">No new notifications</div>
+    </div>
+  </div>
+
+  <!-- Global JS -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+</body>
+
+</html>

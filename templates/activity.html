@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Activity | GymSphere{% endblock %}
+
+{% block content %}
+<div class="text-center space-y-8">
+  <div>
+    <div class="text-4xl font-semibold text-cyan-200 flex items-center justify-center gap-3">
+      <span class="text-5xl">⚡</span>
+      Activity Level
+    </div>
+    <p class="text-gray-300 mt-2">How active are you during a typical week?</p>
+  </div>
+
+  <form method="POST" action="{{ url_for('activity') }}" class="space-y-6 max-w-2xl mx-auto">
+    <div class="grid sm:grid-cols-3 gap-4">
+      {% for level in ["Sedentary", "Light", "Moderate", "Active", "Athlete"] %}
+      <button type="submit" name="activity_level" value="{{ level }}"
+        class="glass neon-border rounded-2xl px-6 py-5 text-lg font-medium text-white hover:-translate-y-0.5 transition transform shadow-lg w-full"
+        style="box-shadow: 0 0 12px #22d3ee, 0 0 18px #a855f7;">
+        {{ level }}
+      </button>
+      {% endfor %}
+    </div>
+
+    <div class="glass rounded-2xl p-6 text-left space-y-3">
+      <label class="text-sm text-gray-300">How many sessions per week?</label>
+      <input type="number" min="1" max="7" name="freq_per_week"
+        class="w-full bg-transparent border border-cyan-400/50 rounded-lg px-3 py-2 text-white focus:outline-none focus:ring-2 focus:ring-cyan-400"
+        placeholder="3" />
+    </div>
+
+    <div class="flex justify-between items-center text-sm">
+      <a href="{{ url_for('measurements') }}" class="text-purple-200 hover:text-cyan-200 transition">← Back</a>
+      <button type="submit" class="px-6 py-3 rounded-xl text-white font-semibold glass neon-border hover:-translate-y-0.5 transition"
+        style="box-shadow: 0 0 12px #22d3ee, 0 0 18px #a855f7;">
+        Save & Continue
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+
+
+

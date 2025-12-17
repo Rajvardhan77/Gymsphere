@@ -1,0 +1,259 @@
+/**
+ * GymSphere Neon Glow Theme Stylesheet
+ * Custom CSS for neon theme, glassmorphism, and animations
+ */
+
+/* CSS Variables for Neon Theme */
+:root {
+    --glass-bg: rgba(255, 255, 255, 0.06);
+    --glass-border: rgba(255, 255, 255, 0.15);
+    --glow-cyan: #22d3ee;
+    --glow-purple: #a855f7;
+    --glow-pink: #ec4899;
+    --bg-dark: #050505;
+    --bg-purple-dark: #0b0315;
+    --bg-purple-deep: #140526;
+}
+
+/* Base Background */
+body {
+    background: radial-gradient(circle at 20% 20%, rgba(34, 211, 238, 0.15), transparent 25%),
+                radial-gradient(circle at 80% 0%, rgba(168, 85, 247, 0.2), transparent 30%),
+                linear-gradient(135deg, var(--bg-dark) 0%, var(--bg-purple-dark) 50%, var(--bg-purple-deep) 100%);
+    min-height: 100vh;
+    color: #e9e9ff;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+
+/* Glassmorphism Card */
+.glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35), 
+                0 0 25px rgba(34, 211, 238, 0.15), 
+                0 0 25px rgba(168, 85, 247, 0.12);
+}
+
+/* Neon Border Glow */
+.neon-border {
+    box-shadow: 0 0 12px var(--glow-cyan), 
+                0 0 24px var(--glow-purple);
+}
+
+.neon-border-cyan {
+    box-shadow: 0 0 15px var(--glow-cyan),
+                0 0 30px rgba(34, 211, 238, 0.5);
+}
+
+.neon-border-purple {
+    box-shadow: 0 0 15px var(--glow-purple),
+                0 0 30px rgba(168, 85, 247, 0.5);
+}
+
+/* Neon Glow Buttons */
+.btn-neon {
+    background: linear-gradient(135deg, var(--glow-cyan), var(--glow-purple));
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.4),
+                0 0 40px rgba(168, 85, 247, 0.3);
+}
+
+.btn-neon:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(34, 211, 238, 0.6),
+                0 0 60px rgba(168, 85, 247, 0.5);
+}
+
+.btn-neon:active {
+    transform: translateY(0);
+}
+
+/* Glowing Input Fields */
+.input-glow {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(34, 211, 238, 0.3);
+    color: #e9e9ff;
+    padding: 12px 16px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+}
+
+.input-glow:focus {
+    outline: none;
+    border-color: var(--glow-cyan);
+    box-shadow: 0 0 15px rgba(34, 211, 238, 0.4);
+    background: rgba(255, 255, 255, 0.08);
+}
+
+/* Intro Animation Styles */
+@keyframes fadeInLogo {
+    0% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes neonPulse {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes pulseGlow {
+    0%, 100% {
+        opacity: 0.6;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    50% {
+        opacity: 0.9;
+        transform: translate(-50%, -50%) scale(1.1);
+    }
+}
+
+@keyframes shineSweep {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+@keyframes fadeOutIntro {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Product Carousel */
+.product-carousel {
+    display: flex;
+    overflow-x: auto;
+    gap: 1rem;
+    padding: 1rem 0;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+}
+
+.product-carousel::-webkit-scrollbar {
+    height: 8px;
+}
+
+.product-carousel::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 4px;
+}
+
+.product-carousel::-webkit-scrollbar-thumb {
+    background: linear-gradient(90deg, var(--glow-cyan), var(--glow-purple));
+    border-radius: 4px;
+}
+
+.product-carousel::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(90deg, var(--glow-purple), var(--glow-cyan));
+}
+
+/* Exercise Cards */
+.exercise-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(34, 211, 238, 0.2);
+    border-radius: 12px;
+    padding: 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.exercise-card:hover {
+    border-color: var(--glow-cyan);
+    box-shadow: 0 0 20px rgba(34, 211, 238, 0.3);
+    transform: translateY(-4px);
+}
+
+/* Responsive Breakpoints */
+@media (max-width: 768px) {
+    .glass {
+        padding: 1rem !important;
+    }
+    
+    .btn-neon {
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+    
+    .product-carousel {
+        gap: 0.75rem;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 14px;
+    }
+    
+    .btn-neon {
+        padding: 8px 16px;
+        font-size: 12px;
+    }
+}
+
+/* Link Hover Effects */
+a {
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    color: var(--glow-cyan);
+}
+
+/* Notification Badge */
+.notification-badge {
+    background: linear-gradient(135deg, var(--glow-pink), var(--glow-purple));
+    color: white;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+    box-shadow: 0 0 10px rgba(236, 72, 153, 0.5);
+}
+
+/* Loading Spinner */
+.spinner {
+    border: 3px solid rgba(34, 211, 238, 0.2);
+    border-top-color: var(--glow-cyan);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
+
+
+

@@ -1,0 +1,301 @@
+{% extends "base.html" %}
+
+{% block title %}Workout | GymSphere{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-white">Today's Workout</h1>
+        <div class="text-sm text-cyan-400 font-semibold">45 min</div>
+    </div>
+
+    <!-- Hero Animation (Placeholder) -->
+    <div
+        class="w-full h-48 rounded-2xl bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center border border-white/10 relative overflow-hidden group">
+        <div
+            class="absolute inset-0 bg-[url('https://assets.lottiefiles.com/temp-gym-bg.png')] bg-cover opacity-20 group-hover:scale-105 transition-transform duration-700">
+        </div>
+        <div class="z-10 text-center">
+            <div class="text-4xl mb-2 animate-bounce">🔥</div>
+            <div class="text-white font-semibold text-xl">Full Body Power</div>
+            <button onclick="startGuidedMode()"
+                class="mt-4 px-6 py-2 bg-cyan-400 hover:bg-cyan-300 text-black font-bold rounded-full text-sm transition-all transform hover:scale-105 shadow-lg shadow-cyan-500/30 flex items-center gap-2 mx-auto">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z">
+                    </path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Start Guided Workout
+            </button>
+        </div>
+    </div>
+
+    <!-- Equipment Needed Bar -->
+    {% if equipment %}
+    <div class="glass-premium rounded-xl p-4 border-l-2 border-purple-500">
+        <div class="text-xs text-purple-300 font-bold uppercase mb-2">Needed Today</div>
+        <div class="flex flex-wrap gap-2">
+            {% for item in equipment %}
+            <span
+                class="px-2 py-1 rounded bg-purple-500/10 border border-purple-500/20 text-xs text-purple-200 flex items-center gap-1">
+                ⚙️ {{ item }}
+            </span>
+            {% endfor %}
+            <a href="#" class="text-xs text-gray-500 underline ml-auto flex items-center hover:text-white">Shop Gear
+                →</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Exercise List -->
+    <div class="space-y-4">
+        {% if workout and workout.exercises %}
+        {% for ex in workout.exercises %}
+        <div class="glass-premium rounded-xl p-4 flex gap-4 items-center">
+            <!-- Visual -->
+            <div
+                class="w-16 h-16 rounded-lg bg-black/40 flex items-center justify-center text-2xl border border-white/5">
+                {% if loop.index % 2 == 0 %}🏋️{% else %}🏃{% endif %}
+            </div>
+
+            <!-- Info -->
+            <div class="flex-1">
+                <div class="text-white font-semibold">{{ ex.name }}</div>
+                <div class="text-sm text-gray-400">{{ ex.sets or 3 }} sets × {{ ex.reps or 12 }} reps</div>
+            </div>
+
+            <!-- Action -->
+            <button
+                class="w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-gray-500 hover:bg-cyan-500 hover:text-white hover:border-cyan-500 transition-all">
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                </svg>
+            </button>
+        </div>
+        {% endfor %}
+        {% else %}
+        <div class="text-center text-gray-400 py-10">Rest Day. Take it easy! 🧘</div>
+        {% endif %}
+    </div>
+
+    <!-- Complete Button -->
+    <button
+        class="w-full py-4 bg-cyan-400 text-black font-bold rounded-xl text-lg hover:bg-cyan-300 transition-colors shadow-[0_0_20px_rgba(0,246,255,0.3)]">
+        Complete Workout
+    </button>
+</div>
+
+<!-- Guided Workout Modal (Full Screen Overlay) -->
+<div id="guidedModal" class="fixed inset-0 z-50 bg-[#0A0A0F] hidden flex-col">
+    <!-- Top Bar -->
+    <div class="p-4 flex items-center justify-between border-b border-white/10">
+        <div class="text-sm text-gray-400">Guided Mode</div>
+        <button onclick="closeGuidedMode()" class="text-white hover:text-red-400 font-bold text-xl">&times;</button>
+    </div>
+
+    <!-- Content -->
+    <div class="flex-1 flex flex-col items-center justify-center p-6 relative">
+        <!-- Progress Bar -->
+        <div class="absolute top-0 left-0 right-0 h-1 bg-white/10">
+            <div id="guidedProgress" class="h-full bg-cyan-400 transition-all duration-300" style="width: 0%"></div>
+        </div>
+
+        <!-- Exercise Display -->
+        <div id="guidedContent" class="w-full max-w-md text-center space-y-6">
+            <div class="text-xs font-bold text-cyan-400 uppercase tracking-widest" id="guidedPhase">WARM UP</div>
+
+            <div
+                class="relative w-64 h-64 mx-auto rounded-full bg-gradient-to-br from-cyan-500/20 to-purple-500/20 border border-white/10 flex items-center justify-center mb-6 neon-border">
+                <div class="text-6xl animate-pulse" id="guidedIcon">🏃</div>
+                <!-- Timer Overlay -->
+                <svg class="absolute inset-0 w-full h-full -rotate-90 pointer-events-none">
+                    <circle cx="128" cy="128" r="124" stroke="rgba(255,255,255,0.1)" stroke-width="4" fill="none">
+                    </circle>
+                    <circle id="timerCircle" cx="128" cy="128" r="124" stroke="#22d3ee" stroke-width="4" fill="none"
+                        stroke-dasharray="779" stroke-dashoffset="0" class="transition-all duration-1000"></circle>
+                </svg>
+            </div>
+
+            <h2 class="text-3xl font-bold text-white" id="guidedName">Jumping Jacks</h2>
+            <div class="text-xl text-gray-300 flex items-center justify-center gap-2">
+                <span id="guidedReps">20 reps</span>
+                <span class="text-gray-600">•</span>
+                <span id="guidedSets">3 sets</span>
+            </div>
+
+            <div class="bg-white/5 rounded-lg p-3 text-sm text-gray-400 italic" id="guidedDesc">
+                Keep your core tight and land softly.
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <div class="w-full max-w-md mt-10 grid grid-cols-2 gap-4">
+            <button onclick="prevExercise()"
+                class="py-3 rounded-xl border border-white/20 text-gray-300 hover:bg-white/10">Previous</button>
+            <button onclick="nextExercise()"
+                class="py-3 rounded-xl bg-cyan-500 text-black font-bold hover:bg-cyan-400 shadow-lg shadow-cyan-500/20"
+                id="nextBtn">Next Exercise →</button>
+        </div>
+
+        <!-- Timer Controls (Optional) -->
+        <div class="mt-6 flex gap-4">
+            <button onclick="startTimer(60)"
+                class="text-xs px-3 py-1 rounded bg-white/10 hover:bg-white/20 text-gray-300">Start 60s Timer</button>
+            <button onclick="startTimer(30)"
+                class="text-xs px-3 py-1 rounded bg-white/10 hover:bg-white/20 text-gray-300">Start 30s Timer</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Embedded Data
+    const workoutData = {{ workout.exercises | tojson }};
+    let currentIndex = 0;
+    let timerInterval;
+
+    function startGuidedMode() {
+        document.getElementById('guidedModal').classList.remove('hidden');
+        document.getElementById('guidedModal').classList.add('flex');
+        loadExercise(0);
+    }
+
+    function closeGuidedMode() {
+        document.getElementById('guidedModal').classList.add('hidden');
+        document.getElementById('guidedModal').classList.remove('flex');
+        stopTimer();
+    }
+
+    function loadExercise(index) {
+        if (index < 0 || index >= workoutData.length) return;
+        currentIndex = index;
+
+        const ex = workoutData[index];
+        const total = workoutData.length;
+
+        // Update Content
+        document.getElementById('guidedName').innerText = ex.name;
+        document.getElementById('guidedReps').innerText = ex.reps || "12 reps";
+        document.getElementById('guidedSets').innerText = (ex.sets || 3) + " sets";
+        document.getElementById('guidedPhase').innerText = ex.phase || "Exercise";
+        document.getElementById('guidedDesc').innerText = ex.description || "Focus on form.";
+        document.getElementById('guidedIcon').innerText = (index % 2 == 0) ? "🏋️" : "🔥"; // Simple Toggle
+
+        // Progress Bar
+        const pct = ((index + 1) / total) * 100;
+        document.getElementById('guidedProgress').style.width = pct + "%";
+
+        // Button Logic
+        const nextBtn = document.getElementById('nextBtn');
+        if (index === total - 1) {
+            nextBtn.innerText = "Finish Workout 🎉";
+            nextBtn.onclick = finishWorkout;
+        } else {
+            nextBtn.innerText = "Next Exercise →";
+            nextBtn.onclick = nextExercise;
+        }
+
+        // Reset Timer Visuals
+        stopTimer();
+    }
+
+    function nextExercise() {
+        if (currentIndex < workoutData.length - 1) {
+            loadExercise(currentIndex + 1);
+        }
+    }
+
+    function prevExercise() {
+        if (currentIndex > 0) {
+            loadExercise(currentIndex - 1);
+        }
+    }
+
+    function finishWorkout() {
+        if (confirm("Great job! Mark workout as complete?")) {
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.disabled = true;
+            nextBtn.innerText = "Saving...";
+
+            // We need an entry ID. For now, we'll try to find "today's" entry ID via API or use a fallback if not in a plan.
+            // Since this is a "Quick Workout" or "Guided Mode" started from dashboard, we might not have a specific plan entry ID handy in this context unless passed.
+            // However, the dashboard logic implies we are checking in for *today's* plan.
+
+            // First, fetch today's plan entry to get ID
+            fetch('/api/plan/today')
+                .then(r => r.json())
+                .then(data => {
+                    let entryId = null;
+                    if (data.status === 'ok' && data.entry) {
+                        entryId = data.entry.id;
+                    }
+
+                    // If no plan, we can't strictly "check in" to a plan, but we can log progress.
+                    // For now, let's assume if they are here, they might have a plan or we just finish.
+
+                    if (!entryId) {
+                        alert("Workout Complete! (No active plan found to check off)");
+                        window.location.href = "{{ url_for('dashboard') }}";
+                        return;
+                    }
+
+                    // Real Check-in
+                    fetch('/api/plan/checkin', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            entry_id: entryId,
+                            type: 'exercise',
+                            note: 'Completed via Guided Mode'
+                        })
+                    })
+                        .then(r => r.json())
+                        .then(res => {
+                            if (res.status === 'ok') {
+                                alert("Workout logged & Streak updated! 🔥");
+                                window.location.href = "{{ url_for('dashboard') }}";
+                            } else {
+                                alert("Error saving workout. Please try again.");
+                                nextBtn.disabled = false;
+                            }
+                        });
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert("Network error. Could not save.");
+                    nextBtn.disabled = false;
+                });
+        }
+    }
+
+    // Simple Timer Logic
+    function startTimer(seconds) {
+        stopTimer();
+        let left = seconds;
+        const circle = document.getElementById('timerCircle');
+        const totalDash = 779;
+
+        circle.style.strokeDashoffset = 0;
+
+        timerInterval = setInterval(() => {
+            left--;
+            const offset = totalDash - (totalDash * left / seconds);
+            circle.style.strokeDashoffset = offset;
+
+            if (left <= 0) {
+                stopTimer();
+                // Play sound?
+                alert("Time's up!");
+            }
+        }, 1000);
+    }
+
+    function stopTimer() {
+        if (timerInterval) clearInterval(timerInterval);
+        document.getElementById('timerCircle').style.strokeDashoffset = 0;
+    }
+
+</script>
+{% endblock %}

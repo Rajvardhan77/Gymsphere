@@ -1,0 +1,120 @@
+{% extends "base.html" %}
+
+{% block title %}Account | GymSphere{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <h1 class="text-2xl font-bold text-white">Profile</h1>
+
+    <!-- User Card -->
+    <div class="glass-premium rounded-2xl p-6 flex items-center gap-4">
+        <div
+            class="w-16 h-16 rounded-full bg-gradient-to-tr from-cyan-400 to-purple-600 flex items-center justify-center text-2xl font-bold text-black border-2 border-white/20">
+            {{ user.fullname[0] if user.fullname else "U" }}
+        </div>
+        <div>
+            <div class="text-lg font-bold text-white">{{ user.fullname }}</div>
+            <div class="text-sm text-gray-400">{{ user.email }}</div>
+        </div>
+    </div>
+
+    <!-- Gamification Data (Moved from Dashboard) -->
+
+    <!-- Badges -->
+    <section>
+        <div class="flex items-center justify-between mb-2 px-1">
+            <h2 class="text-sm font-semibold text-gray-500 uppercase tracking-wide">Trophies</h2>
+        </div>
+        <div class="glass-premium rounded-xl p-4 flex gap-4 overflow-x-auto">
+            {% if badges %}
+            {% for badge in badges %}
+            <div class="flex flex-col items-center min-w-[60px]">
+                <div
+                    class="w-12 h-12 rounded-full bg-gradient-to-br from-yellow-400/20 to-orange-500/20 border border-yellow-500/30 flex items-center justify-center text-2xl shadow-[0_0_10px_rgba(234,179,8,0.2)]">
+                    {{ badge.icon }}
+                </div>
+                <span class="text-[10px] text-gray-400 mt-2 text-center leading-tight">{{ badge.name }}</span>
+            </div>
+            {% endfor %}
+            {% else %}
+            <div class="text-xs text-gray-500 italic w-full text-center py-2">Start your journey to earn badges!</div>
+            {% endif %}
+
+            <div class="flex flex-col items-center min-w-[60px] opacity-40 grayscale">
+                <div
+                    class="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-2xl">
+                    🔒
+                </div>
+                <span class="text-[10px] text-gray-500 mt-2">Locked</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leaderboard -->
+    <section class="glass-premium rounded-xl p-4">
+        <div class="flex items-center justify-between mb-4">
+            <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Leaderboard</h2>
+        </div>
+
+        <div id="leaderboardList" class="space-y-3">
+            <div class="animate-pulse space-y-2">
+                <div class="h-8 bg-white/5 rounded w-full"></div>
+                <div class="h-8 bg-white/5 rounded w-full"></div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // Load Leaderboard
+            fetch('/api/leaderboard')
+                .then(r => r.json())
+                .then(data => {
+                    const list = document.getElementById('leaderboardList');
+                    list.innerHTML = '';
+                    data.forEach((u, i) => {
+                        const rankColor = i === 0 ? 'text-yellow-400' : (i === 1 ? 'text-gray-300' : (i === 2 ? 'text-orange-400' : 'text-gray-500'));
+                        list.innerHTML += `
+                <div class="flex items-center justify-between text-sm">
+                    <div class="flex items-center gap-3">
+                        <span class="font-bold ${rankColor} w-4 text-center">${i + 1}</span>
+                        <span class="text-white">${u.name}</span>
+                    </div>
+                    <span class="text-xs text-gray-400">${u.score} ${u.metric}</span>
+                </div>
+                `;
+                    });
+                });
+        });
+    </script>
+
+    <!-- Settings List -->
+    <div class="space-y-2">
+        <h2 class="text-sm font-semibold text-gray-500 uppercase px-1">Settings</h2>
+
+        <div class="glass-premium rounded-xl overflow-hidden">
+            <a href="{{ url_for('goal') }}"
+                class="flex items-center justify-between p-4 hover:bg-white/5 transition-colors border-b border-white/5">
+                <span class="text-gray-200">Update Goal</span>
+                <span class="text-gray-500">→</span>
+            </a>
+            <a href="{{ url_for('measurements') }}"
+                class="flex items-center justify-between p-4 hover:bg-white/5 transition-colors border-b border-white/5">
+                <span class="text-gray-200">Update Measurements</span>
+                <span class="text-gray-500">→</span>
+            </a>
+            <a href="#" class="flex items-center justify-between p-4 hover:bg-white/5 transition-colors">
+                <span class="text-gray-200">Notifications</span>
+                <span class="text-cyan-400 text-sm">On</span>
+            </a>
+        </div>
+    </div>
+
+    <div class="pt-4">
+        <a href="{{ url_for('logout') }}"
+            class="block w-full text-center py-3 rounded-xl border border-red-500/30 text-red-400 hover:bg-red-500/10 transition-colors">
+            Log Out
+        </a>
+    </div>
+</div>
+{% endblock %}

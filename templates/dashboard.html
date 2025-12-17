@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Hub | GymSphere{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+
+  <!-- 1. Welcome & Quick Stats (Apple Style) -->
+  <section class="flex items-center justify-between">
+    <div>
+      <h1 class="text-2xl font-bold text-white tracking-tight">Today</h1>
+      <p class="text-sm text-gray-400">Welcome back, {{ user.fullname }}</p>
+    </div>
+
+    <!-- Mini Progress Rings (Conceptual) -->
+    <div class="flex items-center gap-2">
+      <!-- Workout Streak -->
+      <div class="flex flex-col items-center bg-white/5 border border-white/10 rounded-lg px-3 py-1">
+        <div class="text-[10px] text-gray-400 uppercase tracking-wider">Workout</div>
+        <div class="text-lg font-bold text-cyan-400 flex items-center gap-1">
+          {{ workout_streak }} <span class="text-sm">🔥</span>
+        </div>
+      </div>
+      <!-- Diet Streak -->
+      <div class="flex flex-col items-center bg-white/5 border border-white/10 rounded-lg px-3 py-1">
+        <div class="text-[10px] text-gray-400 uppercase tracking-wider">Diet</div>
+        <div class="text-lg font-bold text-purple-400 flex items-center gap-1">
+          {{ diet_streak }} <span class="text-sm">🍏</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. Today's Workout Preview -->
+  <section>
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Today's Workout</h2>
+      <a href="{{ url_for('workout_page') }}" class="text-xs text-cyan-400 hover:text-white transition-colors">See
+        details</a>
+    </div>
+
+    <div class="glass-premium rounded-2xl overflow-hidden relative group hover:border-cyan-500/30 transition-colors">
+      <div class="absolute top-0 right-0 p-4 opacity-10 text-6xl group-hover:scale-110 transition-transform">⚡</div>
+
+      <div class="p-5 relative z-10">
+        <div class="flex items-start justify-between">
+          <div>
+            <div class="text-lg font-bold text-white mb-1">Full Body Power</div>
+            <div class="text-sm text-gray-400 mb-4">{{ workout.duration_min }} mins • {{ workout.total_exercises }}
+              exercises</div>
+
+            <div class="flex flex-wrap gap-2 mb-4">
+              {% for ex in workout.exercises %}
+              <span class="px-2 py-1 rounded-md bg-white/5 border border-white/10 text-xs text-gray-300">
+                {{ ex.name }}
+              </span>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-3 mt-2">
+          <a href="{{ url_for('workout_page') }}"
+            class="flex-1 bg-white text-black font-bold text-center py-2.5 rounded-lg text-sm hover:bg-cyan-400 transition-colors">
+            Start Workout
+          </a>
+          <button
+            class="w-10 h-10 flex items-center justify-center rounded-lg border border-white/20 hover:bg-white/10 transition-colors text-white">
+            ✓
+          </button>
+        </div>
+      </div>
+
+      <!-- Progress Bar (Bottom) -->
+      <div class="h-1 bg-white/5 w-full mt-4">
+        <!-- 0% progress for start of day -->
+        <div class="h-full bg-cyan-400 w-0"></div>
+      </div>
+    </div>
+  </section>
+
+
+
+  <!-- 4. Nutrition Summary (Condensed) -->
+  <section>
+    <div class="flex items-center justify-between mb-2">
+      <h2 class="text-sm font-semibold text-gray-300 uppercase tracking-wide">Nutrition Target</h2>
+    </div>
+    <div class="glass-premium rounded-2xl p-4 flex items-center justify-between">
+      <div>
+        <div class="text-xl font-bold text-white">{{ diet.calories }} <span class="text-xs text-gray-400">kcal
+            left</span></div>
+        <div class="text-[10px] text-gray-400 flex gap-2 mt-1">
+          <span>P: {{ diet.macros.protein_g }}g</span>
+          <span class="text-gray-600">|</span>
+          <span>C: {{ diet.macros.carbs_g }}g</span>
+          <span class="text-gray-600">|</span>
+          <span>F: {{ diet.macros.fats_g }}g</span>
+        </div>
+      </div>
+      <a href="{{ url_for('diet_page') }}"
+        class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center hover:bg-white/20 text-white transition-colors">
+        →
+      </a>
+    </div>
+  </section>
+
+  <script>
+    // Scripts for simple interactions moved to respective pages or main.js
+  </script>
+
+
+
+  <!-- 5. AI Insight (Minimal) -->
+  <section class="glass-premium rounded-xl p-4 border-l-2 border-cyan-400 flex gap-3 items-start">
+    <div class="text-cyan-400 pt-0.5">✨</div>
+    <div>
+      <div class="text-xs font-bold text-cyan-400 mb-1">AI INSIGHT</div>
+      <p class="text-sm text-gray-300 leading-snug">Your protein intake has been consistent for 3 days. Keep it up to
+        maximize recovery!</p>
+    </div>
+  </section>
+
+  <!-- 5. Progress Teaser -->
+  <section>
+    <a href="{{ url_for('progress_page') }}"
+      class="block glass-premium rounded-xl p-4 hover:bg-white/5 transition-colors">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="p-2 rounded-lg bg-green-500/10 text-green-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6">
+              </path>
+            </svg>
+          </div>
+          <div>
+            <div class="text-sm font-semibold text-white">Weight Trend</div>
+            <div class="text-xs text-gray-400">On track with goal</div>
+          </div>
+        </div>
+        <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+        </svg>
+      </div>
+    </a>
+  </section>
+
+</div>
+{% endblock %}
